@@ -1,0 +1,417 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Stroke EMS ห้วยคต</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: one continuous story of a stroke patient — results, the clock from 1669 to ER, what to check, what to do, then why we miss targets and the plan. Calm blue-slate ground, deep blue accent, sage secondary; status colors separate. */
+:root{
+  --bg:#EFF2F6; --surface:#FFFFFF; --surface-2:#F4F6FA; --line:#DDE3EC;
+  --ink:#1B2534; --muted:#5B677A; --faint:#8995A6;
+  --accent:#2E5E8E; --accent-soft:#E0EAF4;
+  --sage:#4E8A73; --sage-soft:#E2EFE9;
+  --good:#2F8556; --good-soft:#E1F1E7;
+  --warn:#B67812; --warn-soft:#F8EDD6;
+  --crit:#B5463F; --crit-soft:#F6E2E0;
+  --track:#E5EAF1;
+  --f-display:"Anuphan","IBM Plex Sans Thai",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Thai",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10161F; --surface:#172030; --surface-2:#1C2738; --line:#2A3649;
+  --ink:#E2E9F2; --muted:#A0ADC0; --faint:#748197;
+  --accent:#7FAEDF; --accent-soft:#1F3047;
+  --sage:#7DC2A6; --sage-soft:#1C332B;
+  --good:#5DBB86; --good-soft:#1D3328;
+  --warn:#E0A84A; --warn-soft:#3A2F1A;
+  --crit:#E57B70; --crit-soft:#3D2422;
+  --track:#253246; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10161F; --surface:#172030; --surface-2:#1C2738; --line:#2A3649;
+  --ink:#E2E9F2; --muted:#A0ADC0; --faint:#748197;
+  --accent:#7FAEDF; --accent-soft:#1F3047;
+  --sage:#7DC2A6; --sage-soft:#1C332B;
+  --good:#5DBB86; --good-soft:#1D3328;
+  --warn:#E0A84A; --warn-soft:#3A2F1A;
+  --crit:#E57B70; --crit-soft:#3D2422;
+  --track:#253246; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 56px;display:grid;gap:22px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.3}
+h1{font-size:clamp(1.5rem,3.2vw,2.1rem);font-weight:700}
+h2{font-size:1.15rem;font-weight:600}
+h3{font-size:1rem;font-weight:600}
+p{margin:0}
+.eyebrow{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.muted{color:var(--muted)} .small{font-size:.86rem}
+section{scroll-margin-top:56px}
+
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
+header.top .lead{max-width:64ch;display:grid;gap:6px}
+.call{display:flex;gap:10px;flex-wrap:wrap}
+.call div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 14px;display:grid}
+.call b{font-family:var(--f-num);font-size:1.25rem;color:var(--crit);line-height:1.2}
+.call span{font-size:.76rem;color:var(--muted)}
+nav.jump{display:flex;gap:6px;flex-wrap:wrap;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);padding-block:8px}
+nav.jump a{font-size:.84rem;color:var(--muted);text-decoration:none;padding:5px 12px;border-radius:999px;border:1px solid transparent}
+nav.jump a:hover,nav.jump a:focus-visible{color:var(--accent);border-color:var(--line);background:var(--surface);outline:none}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:14px;min-width:0;align-content:start}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+.grid{display:grid;gap:22px}
+.g-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:980px){.g-4{grid-template-columns:repeat(2,minmax(0,1fr))}.g-3{grid-template-columns:1fr}}
+@media (max-width:720px){.g-2{grid-template-columns:1fr}}
+@media (max-width:480px){.g-4{grid-template-columns:1fr}.wrap{padding-inline:16px}}
+
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:6px;align-content:start;position:relative;overflow:hidden}
+.tile::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:var(--stripe)}
+.tile .label{font-size:.88rem;color:var(--muted);line-height:1.4}
+.tile .big{font-family:var(--f-num);font-size:2.1rem;font-weight:600;line-height:1.1}
+.tile .big small{font-size:1rem;color:var(--muted);font-weight:500}
+.tile .sub{font-size:.82rem;color:var(--muted)}
+.meter{height:8px;background:var(--track);border-radius:4px;position:relative;margin-top:4px}
+.meter i{position:absolute;inset:0 auto 0 0;border-radius:4px;background:var(--stripe)}
+.meter b{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:600;padding:2px 10px;border-radius:999px;white-space:nowrap;width:max-content}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.s-good{color:var(--good);background:var(--good-soft)}
+.s-warn{color:var(--warn);background:var(--warn-soft)}
+.s-crit{color:var(--crit);background:var(--crit-soft)}
+
+/* charts */
+.charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+@media (max-width:820px){.charts{grid-template-columns:1fr}}
+svg{display:block;width:100%;height:auto}
+svg text{fill:var(--muted);font-family:var(--f-num);font-size:11px}
+svg .val{fill:var(--ink);font-size:11.5px;font-weight:600}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:3px;border-radius:2px;display:inline-block}
+.sw.dash{background:repeating-linear-gradient(90deg,var(--crit) 0 4px,transparent 4px 7px)}
+.note{font-size:.85rem;color:var(--muted);background:var(--surface-2);border-radius:10px;padding:10px 12px}
+.note b{color:var(--ink);font-weight:600}
+
+/* timeline */
+.flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;position:relative}
+@media (max-width:1000px){.flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.flow{grid-template-columns:1fr}}
+.stage{background:var(--surface-2);border-radius:12px;padding:14px;display:grid;gap:8px;align-content:start;border-top:3px solid var(--c,var(--accent))}
+.stage .n{font-family:var(--f-num);font-size:.74rem;color:var(--c,var(--accent));font-weight:600}
+.stage ul{margin:0;padding-left:1.05em;display:grid;gap:3px;font-size:.85rem}
+.stage li::marker{color:var(--faint)}
+.tag{font-family:var(--f-num);font-size:.72rem;padding:2px 8px;border-radius:6px;background:var(--warn-soft);color:var(--warn);width:max-content}
+.clock{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:720px){.clock{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.clock div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:2px}
+.clock b{font-family:var(--f-num);font-size:1.2rem;color:var(--accent)}
+.clock span{font-size:.8rem;color:var(--muted)}
+
+/* befast */
+.letters{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+@media (max-width:900px){.letters{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:460px){.letters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.letter{border-radius:12px;padding:14px;background:var(--accent-soft);display:grid;gap:4px;align-content:start}
+.letter .L{font-family:var(--f-display);font-size:2rem;font-weight:700;color:var(--accent);line-height:1}
+.letter .w{font-size:.78rem;font-weight:600;color:var(--accent);letter-spacing:.04em}
+.letter p{font-size:.85rem}
+.letter .how{font-size:.78rem;color:var(--muted)}
+.letter.t{background:var(--crit-soft)} .letter.t .L,.letter.t .w{color:var(--crit)}
+.cpss{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+@media (max-width:640px){.cpss{grid-template-columns:1fr}}
+.prob{display:flex;gap:10px}
+.prob div{border-radius:12px;padding:10px 14px;background:var(--surface-2);display:grid;text-align:center;min-width:110px}
+.prob b{font-family:var(--f-num);font-size:1.5rem;color:var(--accent)}
+.prob span{font-size:.76rem;color:var(--muted)}
+
+/* do dont */
+.dd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.dd{grid-template-columns:1fr}}
+.dd > div{border-radius:12px;padding:14px;display:grid;gap:8px;align-content:start}
+.dd .do{background:var(--good-soft)} .dd .dont{background:var(--crit-soft)}
+.dd h3{font-size:.95rem}
+.dd .do h3{color:var(--good)} .dd .dont h3{color:var(--crit)}
+.dd ul{margin:0;padding-left:1.1em;display:grid;gap:4px;font-size:.87rem}
+
+.list{margin:0;padding-left:1.1em;display:grid;gap:5px;font-size:.88rem}
+.list li::marker{color:var(--faint)}
+.types{display:grid;gap:10px}
+.type{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;padding:12px;border-radius:12px;background:var(--surface-2)}
+.type .pct{font-family:var(--f-num);font-weight:600;color:var(--accent);grid-row:span 2;min-width:64px}
+.type b{font-weight:600}
+.type span{font-size:.85rem;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;padding:4px 11px;border-radius:999px;background:var(--sage-soft);color:var(--sage)}
+
+.cause{display:grid;gap:10px}
+.cause div{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start}
+.cause i{font-style:normal;font-family:var(--f-num);font-size:.78rem;font-weight:600;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--warn-soft);color:var(--warn)}
+.cause p{font-size:.88rem}
+
+.plan{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.plan{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.plan{grid-template-columns:1fr}}
+.plan div{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:4px;align-content:start}
+.plan .k{font-size:.74rem;font-weight:600;color:var(--sage)}
+.plan b{font-weight:600;font-size:.92rem}
+.plan span{font-size:.83rem;color:var(--muted)}
+
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:620px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:.78rem;letter-spacing:.03em}
+td.n{font-family:var(--f-num);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.n small{color:var(--faint);font-size:.72rem;display:block}
+
+.sign{display:flex;flex-wrap:wrap;gap:10px 28px;font-size:.84rem;color:var(--muted)}
+.sign b{color:var(--ink);font-weight:600}
+footer{font-size:.8rem;color:var(--faint);text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="lead">
+      <span class="eyebrow">Clinical Quality · Stroke EMS · โรงพยาบาลห้วยคต</span>
+      <h1>การดูแลผู้ป่วยโรคหลอดเลือดสมองนอกโรงพยาบาล</h1>
+      <p class="muted">รู้อาการเร็ว ระบุเวลาที่เห็นว่าปกติครั้งสุดท้าย (LKW) แยกภาวะน้ำตาลต่ำ และนำส่งพร้อมเปิด Stroke Fast Track ล่วงหน้า ผลปี 2569: การรักษาใน รพ. ผ่านเป้า แต่ผู้ป่วยยังมาถึงช้าและมาด้วย EMS น้อย</p>
+    </div>
+    <div class="call">
+      <div><b>1669</b><span>สายด่วนการแพทย์ฉุกเฉิน</span></div>
+      <div><b>056-518332</b><span>โรงพยาบาลห้วยคต</span></div>
+    </div>
+  </header>
+
+  <nav class="jump" aria-label="ไปยังส่วน">
+    <a href="#result">ผลลัพธ์</a>
+    <a href="#flow">เส้นทางผู้ป่วย</a>
+    <a href="#screen">BE FAST / CPSS</a>
+    <a href="#care">การดูแล</a>
+    <a href="#plan">สาเหตุและแผนพัฒนา</a>
+  </nav>
+
+  <!-- KPI tiles -->
+  <div class="grid g-4">
+    <div class="tile" style="--stripe:var(--crit)">
+      <span class="label">มาด้วยระบบ EMS (ผู้ป่วยมีอาการ FAST)</span>
+      <span class="big">14.28<small>%</small></span>
+      <div class="meter"><i style="width:14.28%"></i><b style="left:60%"></b></div>
+      <span class="pill s-crit">ห่างเป้า &gt;60% อยู่ 45.7 จุด</span>
+      <span class="sub">4 จาก 28 ราย · เพิ่มขึ้น 2 ปีติด</span>
+    </div>
+    <div class="tile" style="--stripe:var(--warn)">
+      <span class="label">มา รพ. ทันภายใน 4.5 ชม. นับจากมีอาการ</span>
+      <span class="big">41.79<small>%</small></span>
+      <div class="meter"><i style="width:41.79%"></i><b style="left:50%"></b></div>
+      <span class="pill s-warn">ยังไม่ถึงเป้า &gt;50%</span>
+      <span class="sub">28 จาก 67 ราย · ลดจาก 48.27% ปี 68</span>
+    </div>
+    <div class="tile" style="--stripe:var(--good)">
+      <span class="label">Fast Track คัดกรอง วินิจฉัย ส่งต่อภายใน 30 นาที</span>
+      <span class="big">89.28<small>%</small></span>
+      <div class="meter"><i style="width:89.28%"></i><b style="left:80%"></b></div>
+      <span class="pill s-good">ผ่านเป้า &gt;80%</span>
+      <span class="sub">25 จาก 28 ราย</span>
+    </div>
+    <div class="tile" style="--stripe:var(--good)">
+      <span class="label">อัตราตายผู้ป่วยในโรคหลอดเลือดสมอง</span>
+      <span class="big">2.86<small>%</small></span>
+      <div class="meter"><i style="width:28.6%"></i><b style="left:70%"></b></div>
+      <span class="pill s-good">ต่ำกว่าเกณฑ์ 7%</span>
+      <span class="sub">1 จาก 35 ราย · ผ่านเกณฑ์ทุกปี</span>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:-10px">แถบเมตร: เส้นดำคือเป้าหมาย (อัตราตายใช้สเกล 0–10%)</p>
+
+  <!-- trends -->
+  <section id="result" class="panel">
+    <div class="panel-head"><h2>แนวโน้มตัวชี้วัด ปี 2563–2569</h2>
+      <div class="legend"><span><i class="sw" style="background:var(--accent)"></i>ผลงาน</span><span><i class="sw dash"></i>เป้าหมาย</span></div></div>
+    <div class="charts">
+      <div class="grid" style="gap:8px"><h3>มา รพ. ทันภายใน 4.5 ชม. (%) <span class="small muted">เป้า &gt;50</span></h3><svg id="c1" viewBox="0 0 460 210" role="img" aria-label="ร้อยละผู้ป่วยมาทัน 4.5 ชั่วโมง ปี 2563 ถึง 2569"></svg></div>
+      <div class="grid" style="gap:8px"><h3>Fast Track ส่งต่อภายใน 30 นาที (%) <span class="small muted">เป้า &gt;80</span></h3><svg id="c2" viewBox="0 0 460 210" role="img" aria-label="ร้อยละ Fast Track ภายใน 30 นาที ปี 2563 ถึง 2569"></svg></div>
+      <div class="grid" style="gap:8px"><h3>ผู้ป่วยอาการ FAST มาด้วย EMS (%) <span class="small muted">เป้า &gt;60</span></h3><svg id="c3" viewBox="0 0 460 210" role="img" aria-label="ร้อยละมาด้วย EMS ปี 2566 ถึง 2569"></svg></div>
+      <div class="grid" style="gap:8px"><h3>อัตราตายผู้ป่วยใน (%) <span class="small muted">เกณฑ์ ≤7</span></h3><svg id="c4" viewBox="0 0 460 210" role="img" aria-label="อัตราตาย ปี 2566 ถึง 2569"></svg></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ตัวชี้วัด</th><th>เป้าหมาย</th><th>2566</th><th>2567</th><th>2568</th><th>2569</th></tr></thead>
+        <tbody>
+          <tr><td>มา รพ. ทันภายใน 4.5 ชม. นับจากมีอาการ FAST</td><td class="n">&gt;50%</td><td class="n">41.26<small>26/63</small></td><td class="n">49.06<small>26/53</small></td><td class="n">48.27<small>28/58</small></td><td class="n">41.79<small>28/67</small></td></tr>
+          <tr><td>Fast Track คัดกรอง วินิจฉัย รักษาเบื้องต้นและส่งต่อภายใน 30 นาที</td><td class="n">&gt;80%</td><td class="n">88<small>22/25</small></td><td class="n">96<small>24/26</small></td><td class="n">82.14<small>23/28</small></td><td class="n">89.28<small>25/28</small></td></tr>
+          <tr><td>ผู้ป่วยอาการ FAST มา รพ. ด้วยระบบ EMS</td><td class="n">&gt;60%</td><td class="n">4</td><td class="n">3.85</td><td class="n">7.14</td><td class="n">14.28<small>4/28</small></td></tr>
+          <tr><td>อัตราตายผู้ป่วยในโรคหลอดเลือดสมอง</td><td class="n">≤7%</td><td class="n">2.94<small>1/34</small></td><td class="n">2.86<small>1/35</small></td><td class="n">2.22<small>1/45</small></td><td class="n">2.86<small>1/35</small></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note"><b>Fast Track ที่ไม่ทันในปี 69:</b> ใส่ ETT ยาก และอาการกับประวัติไม่ชัดเจน · ปี 68 ไตรมาสแรกมีภาวะแทรกซ้อน EKG ผิดปกติ ต้อง consult แก้ไขก่อนจึงเกินเวลา</p>
+  </section>
+
+  <!-- flow -->
+  <section id="flow" class="panel">
+    <div class="panel-head"><h2>เส้นทางผู้ป่วย: จากโทร 1669 ถึงห้องฉุกเฉิน</h2><span class="small muted">ป้ายส้ม = เป้าหมายเวลา</span></div>
+    <div class="flow">
+      <div class="stage"><span class="n">1 · ศูนย์รับแจ้งเหตุ</span><h3>รับแจ้ง 1669 & Triage by phone</h3>
+        <ul><li>คัดกรองด้วย BE FAST</li><li>ถามเวลา Last Known Well (LKW)</li><li>อยู่ในกรอบเวลา = วิกฤต สั่งการทันที</li><li>แนะนำญาติ: งดยา อาหาร น้ำ · นอนตะแคงถ้าซึม/อาเจียน · เตรียมยาประจำตัว · คนที่รู้เวลาเริ่มอาการไปด้วย</li></ul></div>
+      <div class="stage"><span class="n">2 · จุดเกิดเหตุ</span><h3>ประเมินและดูแลเบื้องต้น</h3>
+        <ul><li>ABC ระวังสำลัก</li><li>DTX ทุกราย · &lt;60 mg/dL ให้ 50% glucose แล้วประเมินซ้ำ</li><li>BE FAST / CPSS, GCS, รูม่านตา</li><li>ประเมิน LVO (RACE, FAST-ED, LAMS)</li><li>เปิด IV 18G ข้อพับแขน</li></ul>
+        <span class="tag">On-scene ≤10 นาที</span></div>
+      <div class="stage" style="--c:var(--crit)"><span class="n">3 · แจ้งล่วงหน้า</span><h3>Stroke Alert เปิด Fast Track</h3>
+        <ul><li>แจ้งอายุ/เพศ, LKW, BE FAST + คะแนน LVO, DTX, สัญญาณชีพ, ยาต้านการแข็งตัวของเลือด, ETA</li><li>ER ทำบัตร สั่ง Lab และ CXR ล่วงหน้า</li><li>แพทย์ Standby รอที่ ER</li></ul>
+        <span class="tag">ทุกรายในกรอบเวลา</span></div>
+      <div class="stage"><span class="n">4 · ระหว่างนำส่ง</span><h3>เฝ้าระวังต่อเนื่อง</h3>
+        <ul><li>สัญญาณชีพและความรู้สึกตัวทุก 5–15 นาที</li><li>นอนศีรษะสูง 30° · NPO</li><li>ซักประวัติ SAMPLE: LKW, Warfarin/NOACs, ผ่าตัด/เลือดออก/บาดเจ็บศีรษะ, ชัก</li><li>NSS 1000 ml drip 80 ml/hr · เจาะ CBC, BUN, Cr, E'lyte, PT/INR</li></ul></div>
+      <div class="stage" style="--c:var(--sage)"><span class="n">5 · ห้องฉุกเฉิน</span><h3>ส่งมอบ SBAR & ส่งต่อ</h3>
+        <ul><li>ส่งเวรด้วย SBAR</li><li>คัดกรอง วินิจฉัย รักษาเบื้องต้น</li><li>ส่งต่อ รพ. ที่ให้ยาละลายลิ่มเลือด/ลากลิ่มเลือดได้</li></ul>
+        <span class="tag">Door-to-refer ≤30 นาที</span></div>
+    </div>
+    <div class="clock">
+      <div><b>≤10 นาที</b><span>Response time ในรัศมี 10 กม. (รถพยาบาล stand by)</span></div>
+      <div><b>≤10 นาที</b><span>อยู่ที่จุดเกิดเหตุ</span></div>
+      <div><b>≤30 นาที</b><span>คัดกรองถึงส่งต่อใน รพ.</span></div>
+      <div><b>≤4.5 ชม.</b><span>หน้าต่างยาละลายลิ่มเลือด นับจาก LKW</span></div>
+    </div>
+  </section>
+
+  <!-- screening -->
+  <section id="screen" class="panel">
+    <div class="panel-head"><h2>คัดกรองอาการ: BE FAST</h2><span class="small muted">พบอาการใดอาการหนึ่ง มา รพ. ทันที ไม่ต้องรอดูอาการ</span></div>
+    <div class="letters">
+      <div class="letter"><span class="L">B</span><span class="w">BALANCE</span><p>เวียนศีรษะ เดินเซ ทรงตัวไม่ได้ทันที</p><span class="how">ให้ลุกเดิน สังเกตการทรงตัว</span></div>
+      <div class="letter"><span class="L">E</span><span class="w">EYES</span><p>ตามัว เห็นภาพซ้อน มองไม่เห็นครึ่งซีก</p><span class="how">ถามอาการ ตรวจลานสายตา</span></div>
+      <div class="letter"><span class="L">F</span><span class="w">FACE</span><p>ปากเบี้ยว หน้าเบี้ยว</p><span class="how">ให้ยิ้มหรือยิงฟัน</span></div>
+      <div class="letter"><span class="L">A</span><span class="w">ARM</span><p>แขนขาอ่อนแรงซีกใดซีกหนึ่ง</p><span class="how">ยกแขน 2 ข้างค้าง 10 วินาที</span></div>
+      <div class="letter"><span class="L">S</span><span class="w">SPEECH</span><p>พูดไม่ชัด พูดไม่ได้ ฟังไม่เข้าใจ</p><span class="how">ให้พูดประโยคง่าย ๆ ตาม</span></div>
+      <div class="letter t"><span class="L">T</span><span class="w">TIME</span><p>เวลาที่เริ่มมีอาการ</p><span class="how">ระบุเวลาปกติครั้งสุดท้าย แล้วโทร 1669</span></div>
+    </div>
+    <div class="cpss">
+      <div style="display:grid;gap:6px">
+        <h3>Cincinnati Prehospital Stroke Scale (CPSS)</h3>
+        <p class="small muted">ตรวจ 3 ข้อ: <b style="color:var(--ink)">Facial droop</b> ให้ยิ้มหรือยิงฟัน ดูมุมปากตก · <b style="color:var(--ink)">Arm drift</b> หลับตายกแขนเหยียดค้าง 10 วินาที ดูแขนข้างที่ตก · <b style="color:var(--ink)">Speech</b> พูดประโยคสั้น ดูพูดไม่ชัดหรือพูดไม่ออก</p>
+      </div>
+      <div class="prob">
+        <div><b>~72%</b><span>ผิดปกติ 1 ข้อ</span></div>
+        <div><b>&gt;85%</b><span>ผิดปกติครบ 3 ข้อ</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- care -->
+  <section id="care" class="grid g-2">
+    <div class="panel">
+      <h2>สิ่งที่ควรทำและไม่ควรทำ</h2>
+      <div class="dd">
+        <div class="do"><h3>ควรทำ</h3><ul>
+          <li>บันทึกเวลา LKW เป็นนาฬิกา ไม่ใช่ "ประมาณเช้านี้"</li>
+          <li>ตรวจน้ำตาลในเลือดทุกราย</li>
+          <li>เฝ้าระวังสัญญาณชีพและความรู้สึกตัวทุก 5–15 นาที</li>
+          <li>ให้ญาติที่รู้เวลาเริ่มอาการไปด้วย หรือขอเบอร์ติดต่อ</li>
+          <li>ให้ O<sub>2</sub> เฉพาะเมื่อ SpO<sub>2</sub> ต่ำ</li>
+          <li>ควบคุมการชักตามพิธีปฏิบัติ</li></ul></div>
+        <div class="dont"><h3>ไม่ควรทำ</h3><ul>
+          <li>ให้กินยา อาหาร หรือน้ำ (เสี่ยงสำลัก)</li>
+          <li>ลดความดันเองโดยไม่มีคำสั่งแพทย์</li>
+          <li>ให้ Aspirin ก่อนแยกชนิดแตกหรือตีบ</li>
+          <li>ให้สารน้ำที่มีน้ำตาลหรือปริมาณมากโดยไม่จำเป็น</li>
+          <li>อยู่ที่จุดเกิดเหตุนานเกินจำเป็น</li></ul></div>
+      </div>
+      <p class="note"><b>ความดันโลหิต:</b> โดยทั่วไปไม่ลดนอก รพ. เพราะความดันสูงช่วยรักษาเลือดไปเลี้ยงสมอง ถ้าสูงมากผิดปกติให้ปรึกษาแพทย์อำนวยการฯ ถ้า SBP &lt;90 mmHg ต้องหาสาเหตุและแก้ไข</p>
+    </div>
+    <div class="panel">
+      <h2>ชนิดของโรคและภาวะที่เลียนแบบ</h2>
+      <div class="types">
+        <div class="type"><span class="pct">80–85%</span><b>ตีบหรืออุดตัน (Ischemic)</b><span>rt-PA / Tenecteplase ภายใน 4.5 ชม. และ/หรือ Mechanical thrombectomy ในหลอดเลือดใหญ่อุดตันภายใน 24 ชม.</span></div>
+        <div class="type"><span class="pct">แตก</span><b>Hemorrhagic</b><span>ปวดศีรษะรุนแรงฉับพลัน อาเจียน ซึม ความดันสูงมาก</span></div>
+        <div class="type"><span class="pct">TIA</span><b>อาการหายใน 24 ชม.</b><span>เสี่ยงเกิดซ้ำสูง ต้องนำส่งเช่นกัน</span></div>
+      </div>
+      <h3 style="font-size:.92rem">Stroke mimics</h3>
+      <div class="chips">
+        <span class="chip">น้ำตาลในเลือดต่ำ</span><span class="chip">Todd's paralysis หลังชัก</span><span class="chip">ไมเกรนมีอาการนำ</span><span class="chip">ติดเชื้อระบบประสาท</span><span class="chip">สมองจากความดันสูง</span><span class="chip">เนื้องอกสมอง</span><span class="chip">ยาหรือสารพิษ</span>
+      </div>
+      <p class="note">ถ้าไม่แน่ใจ ให้ถือว่าเป็นโรคหลอดเลือดสมองไว้ก่อน และนำส่งตามแนวทาง Fast Track</p>
+    </div>
+  </section>
+
+  <!-- causes & plan -->
+  <section id="plan" class="grid g-2">
+    <div class="panel">
+      <div class="panel-head"><h2>ทำไมผู้ป่วยยังมาช้าและไม่เรียก EMS</h2><span class="pill s-warn">จากการทบทวน</span></div>
+      <div class="cause">
+        <div><i>1</i><p>ส่วนใหญ่เป็นผู้สูงอายุ มีเบาหวาน/ความดัน และรับยาไม่ต่อเนื่อง</p></div>
+        <div><i>2</i><p>รู้อาการเตือน แต่อาการไม่มาก คล้ายเหน็บชา จึงรอดูจนแน่ใจว่าไม่หาย</p></div>
+        <div><i>3</i><p>บางรายมีอาการแต่ไม่บอกญาติ ทำให้มาถึงล่าช้า</p></div>
+        <div><i>4</i><p>ขาดความรู้ในการเข้าถึงระบบการแพทย์ฉุกเฉิน 1669</p></div>
+      </div>
+      <h3 style="font-size:.92rem;margin-top:4px">สิ่งที่ทำไปแล้ว</h3>
+      <ul class="list">
+        <li>ประชาสัมพันธ์อาการ Stroke และ 1669 ในคลินิก NCD ปกสมุดประจำตัว เสียงตามสาย วิทยุชุมชน</li>
+        <li>ปรับ CPG เพิ่มเกณฑ์คัดกรอง Early detect ตามหลัก FAST และนิเทศหน้างานพยาบาล EMS</li>
+        <li>พยาบาล พขร. และรถพยาบาล stand by ประกัน Response time 10 นาทีในรัศมี 10 กม.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>แผนพัฒนา</h2>
+      <div class="plan" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+        <div><span class="k">บุคลากร</span><b>อบรมและประชุมวิชาการ</b><span>ส่งเจ้าหน้าที่เพิ่มทักษะดูแลผู้ป่วย Stroke อย่างสม่ำเสมอ</span></div>
+        <div><span class="k">ชุมชน</span><b>ให้ความรู้ อสม. แกนนำ นักเรียน</b><span>ค้นหาและคัดกรองกลุ่มเสี่ยงในชุมชน</span></div>
+        <div><span class="k">ประชาสัมพันธ์</span><b>นามบัตร แผ่นพับ บอร์ด</b><span>เน้นคลินิกความดันและเบาหวาน ย้ำให้มาทันที ไม่รอสังเกตอาการ</span></div>
+        <div><span class="k">ประชาสัมพันธ์</span><b>โปสเตอร์ BE FAST + 1669</b><span>ติดที่โรงเรียน วัด และที่สาธารณะ</span></div>
+        <div><span class="k">เฝ้าระวัง</span><b>ปักหมุด EMS</b><span>กลุ่ม CVD risk ระดับกลาง–สูง</span></div>
+        <div><span class="k">ระบบ</span><b>พัฒนาระบบ Stroke ที่มาโดย EMS</b><span>ทบทวนและปรับอย่างต่อเนื่อง</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="panel">
+    <div class="panel-head"><h2>แบบประเมินการออก EMS สำหรับผู้ป่วย Stroke</h2><span class="small muted">ใช้ทบทวนรายเคส</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th style="width:26%">ขั้นตอน</th><th>รายละเอียดการประเมิน</th></tr></thead>
+        <tbody>
+          <tr><td>1. รับแจ้งเหตุ</td><td>คัดกรองได้ว่าเป็น Stroke</td></tr>
+          <tr><td>2. ประเมิน ณ จุดเกิดเหตุ</td><td>ABCD · คัดกรอง BE FAST / CPSS · เจาะ DTX</td></tr>
+          <tr><td>3. BE FAST positive</td><td>สัญญาณชีพและระบบหายใจ · Last Known Well · รายงานอาการตาม MIST</td></tr>
+          <tr><td>4. ถ้าไม่ใช่ Stroke</td><td>ABCD · ค้นหาสาเหตุอื่น · รักษาตามอาการและ Medical direction</td></tr>
+          <tr><td>5. การจัดการและนำส่ง</td><td>ติดตามสัญญาณชีพต่อเนื่อง · ศีรษะสูง 30° · SAMPLE · NSS 1000 ml drip 80 ml/hr และเจาะเลือด · ส่งต่อ ER / Stroke Fast Track แบบ SBAR</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sign"><span>ผู้จัดทำ <b>นางนภัค คำหอม</b> พยาบาลวิชาชีพชำนาญการพิเศษ</span><span>ผู้ทบทวน <b>นายพลรบน้อย จันทา</b> ประธาน SP Stroke</span><span>ผู้อนุมัติ <b>นางสาวกันติชา ไถวเลิศ</b> นายแพทย์ปฏิบัติการ</span></div>
+  </div>
+
+  <footer>โรงพยาบาลห้วยคต · Clinical Tracer Stroke EMS ปี 2569 และแนวทางการดูแลผู้ป่วยโรคหลอดเลือดสมองนอกโรงพยาบาล</footer>
+</div>
+
+<script>
+(function(){
+  const NS='http://www.w3.org/2000/svg';
+  function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e}
+  function chart(id,years,data,max,ticks,target,lowerBetter){
+    const svg=document.getElementById(id);
+    const L=40,R=448,T=22,B=176,y=v=>B-(v/max)*(B-T),step=(R-L)/years.length,xs=years.map((_,i)=>L+step*(i+.5));
+    ticks.forEach(t=>{el('line',{x1:L,x2:R,y1:y(t),y2:y(t),stroke:'var(--line)','stroke-width':1},svg);
+      el('text',{x:L-8,y:y(t)+4,'text-anchor':'end'},svg).textContent=t});
+    years.forEach((yr,i)=>el('text',{x:xs[i],y:B+20,'text-anchor':'middle'},svg).textContent=yr);
+    const pts=data.map((v,i)=>[xs[i],y(v)]);
+    el('path',{d:'M'+pts[0][0]+','+B+' L'+pts.map(p=>p.join(',')).join(' L')+' L'+pts[pts.length-1][0]+','+B+'Z',fill:'var(--accent-soft)'},svg);
+    el('line',{x1:L,x2:R,y1:y(target),y2:y(target),stroke:'var(--crit)','stroke-width':1.5,'stroke-dasharray':'5 4'},svg);
+    el('polyline',{points:pts.map(p=>p.join(',')).join(' '),fill:'none',stroke:'var(--accent)','stroke-width':2.5,'stroke-linejoin':'round'},svg);
+    pts.forEach((p,i)=>{const last=i===pts.length-1,v=data[i],ok=lowerBetter?v<=target:v>target;
+      el('circle',{cx:p[0],cy:p[1],r:last?6:4,fill:last?(ok?'var(--good)':'var(--crit)'):'var(--surface)',stroke:last?(ok?'var(--good)':'var(--crit)'):'var(--accent)','stroke-width':2},svg);
+      const up=p[1]>T+18;el('text',{x:p[0],y:up?p[1]-11:p[1]+19,'text-anchor':'middle',class:'val'},svg).textContent=v});
+  }
+  chart('c1',['63','64','65','66','67','68','69'],[39.72,33.33,31.78,41.26,49.06,48.27,41.79],100,[0,25,50,75,100],50);
+  chart('c2',['63','64','65','66','67','68','69'],[88.2,88.88,66.67,88,96,82.14,89.28],100,[0,25,50,75,100],80);
+  chart('c3',['2566','2567','2568','2569'],[4,3.85,7.14,14.28],100,[0,25,50,75,100],60);
+  chart('c4',['2566','2567','2568','2569'],[2.94,2.86,2.22,2.86],10,[0,2,4,6,8,10],7,true);
+})();
+</script>
+
+</body></html>
